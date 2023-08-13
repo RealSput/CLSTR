@@ -13,25 +13,25 @@ let cluster_events = {}
 
 type @cluster;
 impl @cluster {
-    add: (name, tf) {
+    add: (name: @string, tf: @macro) {
         let cluster_events[name] = {};
         clusters[name] = {
-            message: (event_name, args = []) {
+            message: (event_name: @string, args: @array = []) {
                 cluster_events[name][event_name](args)
             },
-            on: (event, callback) {
+            on: (event: @string, callback: @macro) {
                 cluster_events[name][event] = callback;
             }
         };
         tf(clusters[name]);
     },
-    find: (cluster) {
+    find: (cluster: @string) {
         let found = clusters[cluster];
         return found;
     },
     global: () {
         return {
-            message: (event_name, args = []) {
+            message: (event_name: @string, args: @array = []) {
                 for i in cluster_events {
                     if (dict_has(i[1], event_name)) {
                     	i[1][event_name](args)
