@@ -1,0 +1,43 @@
+dict_has = (dict, name) {
+    let res = false;
+    for i in dict {
+       	if (i[0] == name) {
+        	res = true;
+    	}
+    }
+    return res;
+}
+
+let clusters = {};
+let cluster_events = {}
+
+type @cluster;
+impl @cluster {
+    add: (name, tf) {
+        let cluster_events[name] = {};
+        clusters[name] = {
+            message: (event_name, args = []) {
+                cluster_events[name][event_name](args)
+            },
+            on: (event, callback) {
+                cluster_events[name][event] = callback;
+            }
+        };
+        tf(clusters[name]);
+    },
+    find: (cluster) {
+        let found = clusters[cluster];
+        return found;
+    },
+    global: () {
+        return {
+            message: (event_name, args = []) {
+                for i in cluster_events {
+                    if (dict_has(i[1], event_name)) {
+                    	i[1][event_name](args)
+                    }
+                }
+            }
+        }
+    }
+}
