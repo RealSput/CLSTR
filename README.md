@@ -4,6 +4,7 @@ Group triggers into 'clusters' and send &amp; receive messages between multiple 
 # Example
 ```ts
 extract obj_props
+import "clstr.spwn"
 
 $.add(obj {
   OBJ_ID: 1,
