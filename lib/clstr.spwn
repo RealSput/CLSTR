@@ -3,6 +3,7 @@ dict_has = (dict, name) {
     for i in dict {
        	if (i[0] == name) {
         	res = true;
+            break;
     	}
     }
     return res;
@@ -17,7 +18,7 @@ impl @cluster {
         let cluster_events[name] = {};
         clusters[name] = {
             message: (event_name: @string, args: @array = []) {
-                cluster_events[name][event_name](args)
+                cluster_events[name][event_name](args);
             },
             on: (event: @string, callback: @macro) {
                 cluster_events[name][event] = callback;
@@ -34,7 +35,7 @@ impl @cluster {
             message: (event_name: @string, args: @array = []) {
                 for i in cluster_events {
                     if (dict_has(i[1], event_name)) {
-                    	i[1][event_name](args)
+                    	i[1][event_name](args);
                     }
                 }
             }
